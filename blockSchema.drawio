@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 Edg/132.0.0.0" version="26.0.11">
   <diagram name="Страница — 1" id="hbGsr7mXUlsbWAVXssN9">
-    <mxGraphModel dx="2253" dy="781" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2505" dy="919" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -59,6 +59,9 @@
         <mxCell id="jmDj5T8XsCExtp-TTY_B-4" value="Логин и пароль совпадают?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="-60" y="270" width="210" height="80" as="geometry" />
         </mxCell>
+        <mxCell id="jmDj5T8XsCExtp-TTY_B-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="jmDj5T8XsCExtp-TTY_B-10" target="jmDj5T8XsCExtp-TTY_B-36">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="jmDj5T8XsCExtp-TTY_B-10" value="Вход в систему" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
           <mxGeometry x="-140" y="380" width="120" height="60" as="geometry" />
         </mxCell>
@@ -115,6 +118,15 @@
         </mxCell>
         <mxCell id="jmDj5T8XsCExtp-TTY_B-29" value="Пользователь существует" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
           <mxGeometry x="200" y="560" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="jmDj5T8XsCExtp-TTY_B-34" value="Сохранение пользователя" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="460" y="650" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="jmDj5T8XsCExtp-TTY_B-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="jmDj5T8XsCExtp-TTY_B-28" target="jmDj5T8XsCExtp-TTY_B-34">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="jmDj5T8XsCExtp-TTY_B-36" value="Подключение данных пользователя" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="-145" y="460" width="130" height="80" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
