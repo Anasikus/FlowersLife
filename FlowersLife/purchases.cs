@@ -147,15 +147,22 @@ namespace FlowersLife
             profile.Show();
         }
 
-        private void button9_Click(object sender, EventArgs e)
+        private void purchases_Load(object sender, EventArgs e)
         {
-            Incoming incoming = new Incoming();
-            purchases purchases = new purchases();
-            purchases.Close();
-            incoming.Show();
+
         }
 
-        private void purchases_Load(object sender, EventArgs e)
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel3_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
         {
 
         }

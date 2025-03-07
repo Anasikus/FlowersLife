@@ -32,7 +32,7 @@ namespace FlowersLife
                 mySglConnection.Close();
             }
         }
-
+        public static int CurrentUserId { get; private set; }
         private void button1_Click(object sender, EventArgs e)
         {
             // Получаем данные, введенные пользователем
@@ -44,7 +44,10 @@ namespace FlowersLife
 
             if (isValidUser)
             {
-                // Если пользователь найден, переходим на следующую форму
+                // Если пользователь найден, получаем его id
+                int userId = GetUserIdByCredentials(username, password);
+                CurrentUserId = userId; // Сохраняем id в глобальное свойство
+
                 MessageBox.Show("Авторизация успешна!", "Успех");
 
                 // Создаем форму профиля или другую форму
@@ -59,50 +62,101 @@ namespace FlowersLife
                 MessageBox.Show("Неверный логин или пароль!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        // Метод для проверки данных пользователя в базе данных
-        private bool CheckUserCredentials(string username, string password)
+        private int GetUserIdByCredentials(string username, string password)
         {
-            // Строка подключения к базе данных MySQL
             string connectionString = "server=127.0.0.1;uid=root;pwd=;database=flowersLife;";
 
-            // Запрос для проверки, есть ли пользователь с таким логином и паролем
-            string queryString = "SELECT id, username, password, role FROM users WHERE username = @username AND password = @password";
+            string query = "SELECT id FROM users WHERE username = @username AND password = @password";
 
             try
             {
-                // Создаем подключение к базе данных
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    // Создаем команду с SQL-запросом и параметрами
-                    MySqlCommand command = new MySqlCommand(queryString, connection);
+                    MySqlCommand command = new MySqlCommand(query, connection);
                     command.Parameters.AddWithValue("@username", username);
                     command.Parameters.AddWithValue("@password", password);
 
-                    // Открываем соединение с базой данных
+                    connection.Open();
+                    int userId = Convert.ToInt32(command.ExecuteScalar());
+
+                    return userId;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при подключении к базе данных: " + ex.Message);
+                return -1; // Возвращаем -1 в случае ошибки
+            }
+        }
+
+        // Метод для проверки данных пользователя в базе данных
+        private bool CheckUserCredentials(string username, string password)
+        {
+            string connectionString = "server=127.0.0.1;uid=root;pwd=;database=flowersLife;";
+
+            string query = "SELECT COUNT(*) FROM users WHERE username = @username AND password = @password";
+
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    MySqlCommand command = new MySqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@username", username);
+                    command.Parameters.AddWithValue("@password", password);
+
                     connection.Open();
 
-                    // Выполняем запрос и получаем результаты
+                    // Получаем количество пользователей с такими данными
+                    int count = Convert.ToInt32(command.ExecuteScalar());
+
+                    // Если найден хотя бы один пользователь, возвращаем true
+                    return count > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при подключении к базе данных: " + ex.Message);
+                return false;
+            }
+        }
+
+        // Метод для отображения профиля пользователя
+        private void ShowUserProfile(int userId)
+        {
+            string connectionString = "server=127.0.0.1;uid=root;pwd=;database=flowersLife;";
+
+            // Запрос для получения данных профиля пользователя из таблицы clients
+            string profileQuery = "SELECT * FROM clients WHERE idUsers = @userId";
+
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    MySqlCommand command = new MySqlCommand(profileQuery, connection);
+                    command.Parameters.AddWithValue("@userId", userId);
+
+                    connection.Open();
+
                     using (MySqlDataReader reader = command.ExecuteReader())
                     {
-                        // Проверяем, есть ли такой пользователь
                         if (reader.HasRows)
                         {
-                            // Если нашли пользователя, то возвращаем true
-                            return true;
+                            // Если профиль существует, показываем форму профиля
+                            profile userProfileForm = new profile();
+                            this.Hide(); // Скрываем форму авторизации
+                            userProfileForm.ShowDialog(); // Показываем профиль
+                            this.Close(); // Закрываем форму авторизации
                         }
                         else
                         {
-                            // Если не нашли, возвращаем false
-                            return false;
+                            MessageBox.Show("Профиль не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                // Обработка ошибок подключения
                 MessageBox.Show("Ошибка при подключении к базе данных: " + ex.Message);
-                return false;
             }
         }
 
@@ -130,7 +184,8 @@ namespace FlowersLife
             index index = new index();
             index.Close();
         }
-        //Подсказки в полях ввода
+
+        // Подсказки в полях ввода
         private void textBox2_Enter(object sender, EventArgs e)
         {
             if (textBox2.Text == "Введите пароль")
@@ -150,6 +205,5 @@ namespace FlowersLife
                 textBox2.UseSystemPasswordChar = false; // Отключаем звездочки для подсказки
             }
         }
-        //-----------------------
     }
 }

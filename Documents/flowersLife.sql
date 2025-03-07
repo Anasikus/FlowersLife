@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Янв 31 2025 г., 09:25
+-- Время создания: Мар 07 2025 г., 12:36
 -- Версия сервера: 8.0.30
 -- Версия PHP: 8.0.22
 
@@ -24,6 +24,31 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `clients`
+--
+
+CREATE TABLE `clients` (
+  `id` int NOT NULL,
+  `photo` text,
+  `surname` text,
+  `name` text,
+  `patronymic` text,
+  `dateOfBirth` date DEFAULT NULL,
+  `mail` text,
+  `idUsers` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `clients`
+--
+
+INSERT INTO `clients` (`id`, `photo`, `surname`, `name`, `patronymic`, `dateOfBirth`, `mail`, `idUsers`) VALUES
+(2, NULL, NULL, '124124', NULL, NULL, '564541', 6),
+(3, NULL, NULL, 'Anastasia', NULL, NULL, 'nastyadavydova20@gmail.com', 7);
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `products`
 --
 
@@ -33,22 +58,6 @@ CREATE TABLE `products` (
   `cost` text NOT NULL,
   `photo` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Дамп данных таблицы `products`
---
-
-INSERT INTO `products` (`idProducts`, `nameProducts`, `cost`, `photo`) VALUES
-(1, 'Букет с французкими розами и озотамнусом  FMART by FLOWERS LIFE', '500', 'D:\\Разработка программных модулей 3 курс\\img\\Главная\\букет1.1.png'),
-(2, 'Букет с гортензией, розами и диантусами FMART by FLOWERS LIFE', '750', 'D:\\Разработка программных модулей 3 курс\\img\\Главная\\букет2.1.png'),
-(3, 'Гермини и Роза в коробке FMART by FLOWERS LIFE', '1000', 'D:\\Разработка программных модулей 3 курс\\img\\Главная\\букет3.1.png'),
-(4, 'Букет с розами, хризантемой и диантусом FMART by FLOWERS LIFE', '400', 'D:\\Разработка программных модулей 3 курс\\img\\Главная\\букет4.1.png'),
-(5, 'Букет с лютиками и эустомами FMART by FLOWERS LIFE', '100', 'D:\\Разработка программных модулей 3 курс\\img\\Главная\\букет5.1.png'),
-(6, 'Букет с матиолами, геориями и розами FMART by FLOWERS LIFE', '250', 'D:\\Разработка программных модулей 3 курс\\img\\Главная\\букет6.1.png'),
-(7, 'Лилии', '600', NULL),
-(8, 'Розы', '789', NULL),
-(9, 'опсорлпр', '7587', NULL),
-(10, 'щанвенк', '246', NULL);
 
 -- --------------------------------------------------------
 
@@ -60,7 +69,7 @@ CREATE TABLE `users` (
   `id` int NOT NULL,
   `username` text NOT NULL,
   `password` text NOT NULL,
-  `role` varchar(25) NOT NULL DEFAULT 'user'
+  `role` varchar(255) DEFAULT 'user'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -68,11 +77,21 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `role`) VALUES
-(1, '123', '123', 'user');
+(4, ' +7 (999) 999-99-99', '123', 'user'),
+(5, ' +7 (999) 999-99-98', '123', 'user'),
+(6, '+79999999999', '123', 'user'),
+(7, '+7(968) 020-03-12', '123', 'user');
 
 --
 -- Индексы сохранённых таблиц
 --
+
+--
+-- Индексы таблицы `clients`
+--
+ALTER TABLE `clients`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `idUsers` (`idUsers`);
 
 --
 -- Индексы таблицы `products`
@@ -91,16 +110,32 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT для таблицы `clients`
+--
+ALTER TABLE `clients`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT для таблицы `products`
 --
 ALTER TABLE `products`
-  MODIFY `idProducts` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `idProducts` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- Ограничения внешнего ключа сохраненных таблиц
+--
+
+--
+-- Ограничения внешнего ключа таблицы `clients`
+--
+ALTER TABLE `clients`
+  ADD CONSTRAINT `clients_ibfk_1` FOREIGN KEY (`idUsers`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

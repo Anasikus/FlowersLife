@@ -37,9 +37,9 @@ namespace FlowersLife
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var user = maskedTextBox1.Text;
-            var password = textBox2.Text;
-            var returnPassword = textBox3.Text;
+            var user = maskedTextBox1.Text;  // Номер телефона
+            var password = textBox2.Text;  // Пароль
+            var returnPassword = textBox3.Text;  // Повтор пароля
             string connectionString = "server=127.0.0.1;uid=root;pwd=;database=flowersLife;";
 
             if (password != returnPassword)
@@ -48,6 +48,7 @@ namespace FlowersLife
                 return;
             }
 
+            // Проверка, если телефон уже зарегистрирован
             string checkQuery = $"SELECT COUNT(*) FROM users WHERE username = '{user}'";
 
             try
@@ -65,13 +66,24 @@ namespace FlowersLife
                         return;
                     }
 
+                    // Вставка нового пользователя в таблицу users
                     string insertQuery = $"INSERT INTO users (username, password) VALUES ('{user}', '{password}')";
-                    MySqlCommand command = new MySqlCommand(insertQuery, connection);
-                    int result = command.ExecuteNonQuery();
+                    MySqlCommand insertCommand = new MySqlCommand(insertQuery, connection);
+                    int result = insertCommand.ExecuteNonQuery();
 
                     if (result == 1)
                     {
-                        MessageBox.Show("Аккаунт успешно создан!", "Успех!");
+                        // Получаем id нового пользователя
+                        string selectIdQuery = $"SELECT id FROM users WHERE username = '{user}'";
+                        MySqlCommand selectIdCommand = new MySqlCommand(selectIdQuery, connection);
+                        int userId = Convert.ToInt32(selectIdCommand.ExecuteScalar());
+
+                        // Создание профиля в таблице clients
+                        string createProfileQuery = $"INSERT INTO clients (idUsers) VALUES ({userId})";
+                        MySqlCommand createProfileCommand = new MySqlCommand(createProfileQuery, connection);
+                        createProfileCommand.ExecuteNonQuery();
+
+                        MessageBox.Show("Аккаунт успешно создан и профиль добавлен!", "Успех!");
                         autorization autorization = new autorization();
                         this.Hide();
                         autorization.ShowDialog();
@@ -95,6 +107,7 @@ namespace FlowersLife
                 MessageBox.Show($"Неизвестная ошибка: {ex.Message}");
             }
         }
+
 
         private void registration_Load(object sender, EventArgs e)
         {
