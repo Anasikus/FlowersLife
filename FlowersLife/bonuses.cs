@@ -15,6 +15,10 @@ namespace FlowersLife
         public bonuses()
         {
             InitializeComponent();
+            panel1.Location = new Point(
+                                    (ClientSize.Width - panel1.Width) / 2,
+                                    (ClientSize.Height - panel1.Height) / 2
+                                        );
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -29,13 +33,17 @@ namespace FlowersLife
 
         private void button1_Click(object sender, EventArgs e)
         {
+            this.Close();
             profile profile = new profile();
-            bonuses bonuses = new bonuses();
-            bonuses.Close();
             profile.Show();
         }
 
         private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
         {
 
         }

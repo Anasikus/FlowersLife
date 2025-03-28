@@ -16,6 +16,12 @@ namespace FlowersLife
         public autorization()
         {
             InitializeComponent();
+
+            panel1.Location = new Point(
+                (ClientSize.Width - panel1.Width) / 2,
+                (ClientSize.Height - panel1.Height) / 2
+            );
+
             string mysglConn = "server = 127.0.0.1; user = root; database = flowersLife; password=";
             MySqlConnection mySglConnection = new MySqlConnection(mysglConn);
             try
@@ -162,10 +168,7 @@ namespace FlowersLife
 
         private void autorization_Load(object sender, EventArgs e)
         {
-            panel1.Location = new Point(
-                (ClientSize.Width - panel1.Width) / 2,
-                (ClientSize.Height - panel1.Height) / 2
-            );
+            
             textBox2.Text = "Введите пароль";
             textBox2.ForeColor = Color.Gray;
             textBox2.UseSystemPasswordChar = false; // Подсказка без звездочек
@@ -204,6 +207,11 @@ namespace FlowersLife
                 textBox2.ForeColor = Color.Gray;
                 textBox2.UseSystemPasswordChar = false; // Отключаем звездочки для подсказки
             }
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

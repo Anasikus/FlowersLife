@@ -46,10 +46,9 @@
             this.button14 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.telephoneBox = new System.Windows.Forms.TextBox();
+            this.maskedTextBox1 = new System.Windows.Forms.MaskedTextBox();
             this.mailBox = new System.Windows.Forms.TextBox();
             this.nameBox = new System.Windows.Forms.TextBox();
-            this.button5 = new System.Windows.Forms.Button();
             this.save = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -64,21 +63,23 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(159, 277);
+            this.label1.Location = new System.Drawing.Point(85, 265);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 25);
             this.label1.TabIndex = 20;
             this.label1.Text = "Имя";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label8.Location = new System.Drawing.Point(150, 302);
+            this.label8.Location = new System.Drawing.Point(85, 300);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(72, 25);
             this.label8.TabIndex = 21;
             this.label8.Text = "Почта";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // button12
             // 
@@ -95,11 +96,12 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label9.Location = new System.Drawing.Point(140, 327);
+            this.label9.Location = new System.Drawing.Point(85, 334);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(102, 25);
             this.label9.TabIndex = 23;
             this.label9.Text = "Телефон";
+            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // button13
             // 
@@ -135,13 +137,14 @@
             this.button4.TabIndex = 25;
             this.button4.Text = "Выйти";
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // pictureBox2
             // 
             this.pictureBox2.BackgroundImage = global::FlowersLife.Properties.Resources.Group_34;
             this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pictureBox2.InitialImage = global::FlowersLife.Properties.Resources.Group_34;
-            this.pictureBox2.Location = new System.Drawing.Point(87, 45);
+            this.pictureBox2.Location = new System.Drawing.Point(90, 45);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(210, 210);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -268,26 +271,34 @@
             // 
             // panel3
             // 
-            this.panel3.Controls.Add(this.telephoneBox);
+            this.panel3.Controls.Add(this.maskedTextBox1);
             this.panel3.Controls.Add(this.mailBox);
             this.panel3.Controls.Add(this.nameBox);
-            this.panel3.Controls.Add(this.button5);
             this.panel3.Controls.Add(this.save);
             this.panel3.Controls.Add(this.button8);
             this.panel3.Controls.Add(this.pictureBox1);
-            this.panel3.Location = new System.Drawing.Point(203, 315);
+            this.panel3.Location = new System.Drawing.Point(227, 315);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(395, 505);
             this.panel3.TabIndex = 29;
             this.panel3.Visible = false;
+            this.panel3.Paint += new System.Windows.Forms.PaintEventHandler(this.panel3_Paint);
             // 
-            // telephoneBox
+            // maskedTextBox1
             // 
-            this.telephoneBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.telephoneBox.Location = new System.Drawing.Point(65, 332);
-            this.telephoneBox.Name = "telephoneBox";
-            this.telephoneBox.Size = new System.Drawing.Size(260, 29);
-            this.telephoneBox.TabIndex = 28;
+            this.maskedTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.maskedTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.maskedTextBox1.Location = new System.Drawing.Point(65, 328);
+            this.maskedTextBox1.Margin = new System.Windows.Forms.Padding(0);
+            this.maskedTextBox1.Mask = " +7 (000) 000-00-00";
+            this.maskedTextBox1.MaximumSize = new System.Drawing.Size(355, 60);
+            this.maskedTextBox1.Name = "maskedTextBox1";
+            this.maskedTextBox1.ResetOnSpace = false;
+            this.maskedTextBox1.Size = new System.Drawing.Size(260, 31);
+            this.maskedTextBox1.TabIndex = 30;
+            this.maskedTextBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // mailBox
             // 
@@ -304,16 +315,6 @@
             this.nameBox.Name = "nameBox";
             this.nameBox.Size = new System.Drawing.Size(260, 29);
             this.nameBox.TabIndex = 26;
-            // 
-            // button5
-            // 
-            this.button5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button5.Location = new System.Drawing.Point(65, 461);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(260, 38);
-            this.button5.TabIndex = 25;
-            this.button5.Text = "Выйти";
-            this.button5.UseVisualStyleBackColor = true;
             // 
             // save
             // 
@@ -333,9 +334,9 @@
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(260, 38);
             this.button8.TabIndex = 22;
-            this.button8.Text = "Выйти из аккаунта";
+            this.button8.Text = "Отменить изменения";
             this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button12_Click);
+            this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // pictureBox1
             // 
@@ -396,12 +397,11 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button save;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.TextBox telephoneBox;
         private System.Windows.Forms.TextBox mailBox;
         private System.Windows.Forms.TextBox nameBox;
+        private System.Windows.Forms.MaskedTextBox maskedTextBox1;
     }
 }

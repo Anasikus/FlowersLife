@@ -16,6 +16,13 @@ namespace FlowersLife
         public registration()
         {
             InitializeComponent();
+
+            registration registration = new registration();
+            panel1.Location = new Point(
+            (registration.ClientSize.Width - panel1.Width) / 2,
+            (registration.ClientSize.Height - panel1.Height) / 2
+            );
+
             string mysglConn = "server = 127.0.0.1; user = root; database = flowersLife; password=";
             MySqlConnection mySglConnection = new MySqlConnection(mysglConn);
             try
@@ -112,11 +119,7 @@ namespace FlowersLife
         private void registration_Load(object sender, EventArgs e)
         {
             //Центровка панели
-            registration registration = new registration();
-            panel1.Location = new Point(
-            (registration.ClientSize.Width - panel1.Width) / 2,
-            (registration.ClientSize.Height - panel1.Height) / 2
-            );
+
             //
             textBox2.Text = "Придумайте пароль";
             textBox2.ForeColor = Color.Gray;
@@ -172,6 +175,11 @@ namespace FlowersLife
                 textBox3.ForeColor = Color.Black;
                 textBox3.UseSystemPasswordChar = true; // Включаем отображение звездочек
             }
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

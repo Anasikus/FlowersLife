@@ -130,6 +130,7 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(832, 450);
             this.panel1.TabIndex = 16;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // label8
             // 
@@ -166,6 +167,7 @@
             this.Name = "bonuses";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form6";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

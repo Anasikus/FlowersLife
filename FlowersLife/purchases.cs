@@ -9,162 +9,334 @@ namespace FlowersLife
     public partial class purchases : Form
     {
         private string connectionString = "server=localhost;user=root;database=flowersLife;password=";
+        private TableLayoutPanel tableLayoutPanel1;
+        private Panel scrollPanel;
 
         public purchases()
         {
             InitializeComponent();
 
-            // Включаем полосу прокрутки
-            Panel mainPanel = new Panel
-            {
-                AutoScroll = true,
-                Dock = DockStyle.Fill // Панель занимает всю форму
-            };
-            this.Controls.Add(mainPanel);
 
-            LoadAllProducts(mainPanel);
+            // Панель для прокрутки (размер 1200x810, координаты 626; 163)
+            scrollPanel = new Panel
+            {
+                Size = new Size(1000, 810),
+                Location = new Point(626, 115),
+                AutoScroll = true,
+                BackColor = Color.Transparent,
+                Padding = new Padding(20)
+            };
+            this.Controls.Add(scrollPanel);
+
+            // TableLayoutPanel для карточек товаров
+            tableLayoutPanel1 = new TableLayoutPanel
+            {
+                ColumnCount = 3, // 3 колонки для карточек
+                AutoSize = true,
+                Dock = DockStyle.Top,
+                Padding = new Padding(20),
+                BackColor = Color.Transparent
+            };
+
+            // Настроим столбцы (по 33.3% ширины)
+            for (int i = 0; i < 3; i++)
+                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3F));
+
+            scrollPanel.Controls.Add(tableLayoutPanel1);
+            tableLayoutPanel1.AutoSize = false;
+            tableLayoutPanel1.AutoScroll = true;
+            tableLayoutPanel1.Size = new Size(1160, 770);
+            LoadCategories();
+            LoadAllProducts();
         }
 
-        private void LoadAllProducts(Panel container)
+        private void LoadAllProducts()
         {
             try
             {
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
-
                     string query = "SELECT photo, nameProducts, cost FROM products";
+
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
-                        // Настройки расположения
-                        int x = 40;
-                        int y = 120; // Отступ сверху от первого элемента
-                        int spacing = 10; // Отступ между карточками
-                        int boxWidth = 150; // Ширина карточки
-                        int boxHeight = 200; // Высота карточки
-                        int maxPerRow = 2; // Карточек в строке
-
-                        // Учет нижней панели
-                        int lowerPanelOffset = 120; // Добавляем дополнительный отступ для нижней панели
-
-                        int countInRow = 0; // Счетчик карточек в строке
-                        int currentY = y;
+                        int cardWidth = 200;
+                        int cardHeight = 260;
+                        int padding = 10;
+                        int count = 0;
 
                         while (reader.Read())
                         {
-                            // Загружаем путь к изображению
-                            string imagePath = reader["photo"] as string;
-                            string name = reader["nameProducts"] as string;
-                            decimal price = reader.GetDecimal("cost");
+                            string imagePath = reader["photo"]?.ToString();
+                            string name = reader["nameProducts"]?.ToString();
+                            decimal cost = reader.GetDecimal("cost");
 
-                            // Проверяем, существует ли изображение
-                            Image image = null;
-                            if (!string.IsNullOrEmpty(imagePath) && File.Exists(imagePath))
-                            {
-                                image = Image.FromFile(imagePath);
-                            }
+                            // Загружаем изображение или заглушку
+                            Image productImage = File.Exists(imagePath) ? Image.FromFile(imagePath) :
+                                Image.FromFile("F:\\Учеба\\Разработка программных модулей 3 курс\\FlowersLife\\Resources\\placeholder.png");
 
-                            // Создаем карточку
-                            Panel productPanel = new Panel
+                            // Карточка товара
+                            Panel card = new Panel
                             {
-                                Size = new Size(boxWidth, boxHeight),
-                                Location = new Point(x, currentY),
-                                BorderStyle = BorderStyle.FixedSingle
+                                Size = new Size(cardWidth, cardHeight),
+                                Margin = new Padding(padding), // Отступы 20px
+                                BorderStyle = BorderStyle.FixedSingle,
+                                BackColor = Color.White
                             };
 
-                            // PictureBox для изображения
-                            PictureBox pictureBox = new PictureBox
+                            // Изображение товара
+                            PictureBox pic = new PictureBox
                             {
-                                SizeMode = PictureBoxSizeMode.StretchImage,
-                                Size = new Size(130, 100),
-                                Location = new Point(10, 10),
-                                Image = image ?? Image.FromFile("F:\\Учеба\\Разработка программных модулей 3 курс\\FlowersLife\\Resources\\placeholder.png")
+                                Image = productImage,
+                                SizeMode = PictureBoxSizeMode.Zoom,
+                                Size = new Size(180, 140),
+                                Location = new Point(10, 10)
                             };
-                            productPanel.Controls.Add(pictureBox);
+                            card.Controls.Add(pic);
 
-                            // Label для имени
+                            // Название товара
                             Label nameLabel = new Label
                             {
-                                Text = name ?? "Название отсутствует",
-                                AutoSize = false,
-                                Size = new Size(130, 30),
-                                Location = new Point(10, 120),
+                                Text = name,
+                                Location = new Point(10, 160),
+                                Size = new Size(180, 40),
+                                Font = new Font("Arial", 9, FontStyle.Bold),
                                 TextAlign = ContentAlignment.MiddleCenter
                             };
-                            productPanel.Controls.Add(nameLabel);
+                            card.Controls.Add(nameLabel);
 
-                            // Label для цены
+                            // Цена товара
                             Label priceLabel = new Label
                             {
-                                Text = $"{price:C}",
-                                AutoSize = false,
-                                Size = new Size(130, 20),
-                                Location = new Point(10, 160),
-                                TextAlign = ContentAlignment.MiddleCenter,
-                                ForeColor = Color.Green
+                                Text = $"{cost:C} ₽",
+                                Location = new Point(10, 210),
+                                Size = new Size(180, 25),
+                                Font = new Font("Arial", 10, FontStyle.Regular),
+                                ForeColor = Color.Green,
+                                TextAlign = ContentAlignment.MiddleCenter
                             };
-                            productPanel.Controls.Add(priceLabel);
+                            card.Controls.Add(priceLabel);
 
-                            // Добавляем карточку в контейнер
-                            container.Controls.Add(productPanel);
+                            // Добавляем карточку в таблицу
+                            int row = count / 3;
+                            int col = count % 3;
 
-                            // Смещаем позицию для следующей карточки
-                            countInRow++;
-                            if (countInRow >= maxPerRow)
+                            // Добавляем новую строку при необходимости
+                            tableLayoutPanel1.RowCount = (count / 3) + 1;
+                            if (tableLayoutPanel1.RowCount > tableLayoutPanel1.RowStyles.Count)
                             {
-                                countInRow = 0;
-                                x = 40; // Возвращаемся к началу строки
-                                currentY += boxHeight + spacing;
+                                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.AutoSize));
                             }
-                            else
-                            {
-                                x += boxWidth + spacing;
-                            }
+
+
+                            tableLayoutPanel1.Controls.Add(card, col, row);
+                            count++;
                         }
-
-                        // Увеличиваем высоту контейнера, если карточки доходят до нижней панели
-                        container.Height = currentY + boxHeight + lowerPanelOffset + 200;
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Ошибка загрузки: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void button10_Click(object sender, EventArgs e)
+        private void LoadCategories()
         {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "SELECT codeCategory, title, photo FROM categories";
 
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int categoryId = reader.GetInt32("codeCategory");
+                            string title = reader["title"].ToString();
+                            string imagePath = reader["photo"].ToString();
+
+                            // Загружаем изображение или заглушку
+                            Image categoryImage = File.Exists(imagePath) ? Image.FromFile(imagePath) :
+                                Image.FromFile("F:\\Учеба\\Разработка программных модулей 3 курс\\FlowersLife\\Resources\\placeholder.png");
+
+                            // Панель категории (контейнер)
+                            Panel categoryPanel = new Panel
+                            {
+                                Size = new Size(180, 120),
+                                Margin = new Padding(5),
+                                BorderStyle = BorderStyle.FixedSingle,
+                                BackColor = Color.White
+                            };
+
+                            // Вложенный TableLayoutPanel для центрирования
+                            TableLayoutPanel innerTable = new TableLayoutPanel
+                            {
+                                Dock = DockStyle.Fill,
+                                RowCount = 2,
+                                ColumnCount = 1
+                            };
+                            innerTable.RowStyles.Add(new RowStyle(SizeType.Percent, 60)); // Верхняя часть (изображение)
+                            innerTable.RowStyles.Add(new RowStyle(SizeType.Percent, 40)); // Нижняя часть (текст)
+
+                            // Изображение категории
+                            PictureBox pic = new PictureBox
+                            {
+                                Image = categoryImage,
+                                SizeMode = PictureBoxSizeMode.Zoom,
+                                Size = new Size(55, 60),
+                                Anchor = AnchorStyles.None,
+                                Cursor = Cursors.Hand, // Изменяем курсор
+                                Tag = categoryId // Передаём ID категории
+                            };
+
+                            // Название категории (многострочный текст)
+                            Label nameLabel = new Label
+                            {
+                                Text = title,
+                                AutoSize = false,
+                                Dock = DockStyle.Fill,
+                                Font = new Font("Arial", 9, FontStyle.Bold),
+                                TextAlign = ContentAlignment.MiddleCenter,
+                                MaximumSize = new Size(180, 50) // Ограничение высоты
+                            };
+
+                            // Добавляем клик на изображение для фильтрации товаров
+                            pic.Click += (sender, e) =>
+                            {
+                                int selectedCategoryId = (int)((PictureBox)sender).Tag;
+                                LoadProductsByCategory(selectedCategoryId);
+                            };
+
+                            // Добавляем элементы в таблицу
+                            innerTable.Controls.Add(pic, 0, 0);
+                            innerTable.Controls.Add(nameLabel, 0, 1);
+
+                            // Добавляем вложенную таблицу в панель категории
+                            categoryPanel.Controls.Add(innerTable);
+
+                            // Добавляем панель в tableLayoutPanel2
+                            tableLayoutPanel2.Controls.Add(categoryPanel);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки категорий: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private void button11_Click(object sender, EventArgs e)
+
+
+
+        private void LoadProductsByCategory(int categoryId)
         {
-            purchases purchases = new purchases();
-            profile profile = new profile();
-            purchases.Close();
-            profile.Show();
+            tableLayoutPanel1.Controls.Clear(); // Очищаем предыдущие товары
+
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "SELECT photo, nameProducts, cost FROM products WHERE codeCategory = @categoryId";
+
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@categoryId", categoryId);
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            int cardWidth = 200;
+                            int cardHeight = 260;
+                            int padding = 10;
+                            int count = 0;
+
+                            while (reader.Read())
+                            {
+                                string imagePath = reader["photo"]?.ToString();
+                                string name = reader["nameProducts"]?.ToString();
+                                decimal cost = reader.GetDecimal("cost");
+
+                                // Загружаем изображение или заглушку
+                                Image productImage = File.Exists(imagePath) ? Image.FromFile(imagePath) :
+                                    Image.FromFile("F:\\Учеба\\Разработка программных модулей 3 курс\\FlowersLife\\Resources\\placeholder.png");
+
+                                // Карточка товара
+                                Panel card = new Panel
+                                {
+                                    Size = new Size(cardWidth, cardHeight),
+                                    Margin = new Padding(padding),
+                                    BorderStyle = BorderStyle.FixedSingle,
+                                    BackColor = Color.White
+                                };
+
+                                // Изображение товара
+                                PictureBox pic = new PictureBox
+                                {
+                                    Image = productImage,
+                                    SizeMode = PictureBoxSizeMode.Zoom,
+                                    Size = new Size(180, 140),
+                                    Location = new Point(10, 10)
+                                };
+                                card.Controls.Add(pic);
+
+                                // Название товара
+                                Label nameLabel = new Label
+                                {
+                                    Text = name,
+                                    Location = new Point(10, 160),
+                                    Size = new Size(180, 40),
+                                    Font = new Font("Arial", 9, FontStyle.Bold),
+                                    TextAlign = ContentAlignment.MiddleCenter
+                                };
+                                card.Controls.Add(nameLabel);
+
+                                // Цена товара
+                                Label priceLabel = new Label
+                                {
+                                    Text = $"{cost:C} ₽",
+                                    Location = new Point(10, 210),
+                                    Size = new Size(180, 25),
+                                    Font = new Font("Arial", 10, FontStyle.Regular),
+                                    ForeColor = Color.Green,
+                                    TextAlign = ContentAlignment.MiddleCenter
+                                };
+                                card.Controls.Add(priceLabel);
+
+                                // Добавляем карточку в таблицу
+                                int row = count / 3;
+                                int col = count % 3;
+
+                                // Добавляем новую строку при необходимости
+                                tableLayoutPanel1.RowCount = (count / 3) + 1;
+                                if (tableLayoutPanel1.RowCount > tableLayoutPanel1.RowStyles.Count)
+                                {
+                                    tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+                                }
+
+                                tableLayoutPanel1.Controls.Add(card, col, row);
+                                count++;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки товаров: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private void purchases_Load(object sender, EventArgs e)
+
+        private void button6_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void panel3_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
+            this.Close();
+            new profile().Show();
         }
     }
 }
